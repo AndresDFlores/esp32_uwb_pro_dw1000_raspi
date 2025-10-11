@@ -14,23 +14,23 @@ class UWB1000UART:
         self.serialData = serial.Serial(port, baudrate, timeout=timeout)
         self.set_distance(distance=None)
 
-        time.sleep(2)  # Allow time for the serial connection to initialize
+        time.sleep(2)  # time for the serial connection to initialize
 
 
     def read_distance(self):
 
         data = self.serialData.readline().decode('utf-8').strip()
-        if len(data) == 49:
+        print(data)
+
+        if len(data) == 47:
 
             distance = data[19:23]
-
-            self.set_distance(
-                float(distance)
-                )
+            self.set_distance(distance=float(distance))
 
 
     def close(self):
         self.serialData.close()
+
 
 
 if __name__ == '__main__':
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     try:
         while True:
             uwb_class.read_distance()
-            print(f'DISTANCE: {uwb_class.distance}m')
+            # print(f'DISTANCE: {uwb_class.distance}')
 
     except KeyboardInterrupt:
         print("Exiting...")
