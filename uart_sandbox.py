@@ -20,12 +20,19 @@ class UWB1000UART:
     def read_distance(self):
 
         data = self.serialData.readline().decode('utf-8').strip()
-        print(data)
 
-        if len(data) == 47:
+        #  remove string characters
+        for char in ['', '(', ')']:
+            data=data.strip(char)
 
-            distance = data[19:23]
-            self.set_distance(distance=float(distance))
+        #  split remaining string chars at the comma
+        data_vals = data.split(',')
+
+        #  convert split string chars into numeric types and put in tuple
+        anchor_address = int(data_vals[0].strip())
+        anchor_distance = float(data_vals[-1].strip())
+
+        return (anchor_address, anchor_distance)
 
 
     def close(self):
@@ -34,13 +41,15 @@ class UWB1000UART:
 
 
 if __name__ == '__main__':
-    
+
     uwb_class = UWB1000UART()
 
     try:
         while True:
-            uwb_class.read_distance()
-            # print(f'DISTANCE: {uwb_class.distance}')
+            uwb_data = uwb_class.read_distance()
+
+            if uwb_data[-1]>=0:
+                print(f'ANCHOR {uwb_data[0]//100}: {uwb_data[-1]}m')
 
     except KeyboardInterrupt:
         print("Exiting...")
