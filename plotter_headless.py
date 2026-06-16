@@ -72,11 +72,11 @@ def update(frame):
             if len(data)>15:
                 filtered_data = signal.sosfiltfilt(sos, data)
                 filtered_line.set_data(range(len(filtered_data)), filtered_data)
-                plot_title=f'UWB DW1000 Data Sampling Test\nLast Measurement: {data[-1]:.2f}m | Filtered: {filtered_data[-1]:.2f}m'
+                plot_title=f'Last Measurement: {data[-1]:.2f}m | Filtered: {filtered_data[-1]:.2f}m'
             else:
-                plot_title=f'UWB DW1000 Data Sampling Test\nLast Measurement: {data[-1]:.2f}m'
+                plot_title=f'Last Measurement: {data[-1]:.2f}m'
 
-            ax.set_title(plot_title)
+            ax.set_title(f'UWB DW1000 Data Sampling Test\n{plot_title}')
 
 
     except BlockingIOError:

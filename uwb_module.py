@@ -19,7 +19,10 @@ class UWB1000UART:
 
     def read_distance(self):
 
+        self.serialData.reset_input_buffer()  # discard stale data
         data = self.serialData.readline().decode('utf-8').strip()
+
+        # data = self.serialData.readline().decode('utf-8').strip()
 
         #  remove string characters
         for char in ['', '(', ')']:
@@ -37,22 +40,3 @@ class UWB1000UART:
 
     def close(self):
         self.serialData.close()
-
-
-
-if __name__ == '__main__':
-
-    uwb_class = UWB1000UART()
-
-    try:
-        while True:
-            uwb_data = uwb_class.read_distance()
-
-            if uwb_data[-1]>=0:
-                print(f'ANCHOR {uwb_data[0]//100}: {uwb_data[-1]}m')
-
-    except KeyboardInterrupt:
-        print("Exiting...")
-
-    finally:
-        uwb_class.close()
