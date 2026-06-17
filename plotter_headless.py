@@ -39,8 +39,8 @@ sos = signal.butter(4, 10, 'low', fs=1000, output='sos')
 
 # --- Plot setup ---
 fig, ax = plt.subplots()
-line, = ax.plot([], [], linewidth=1)
-filtered_line, = ax.plot([], [], linewidth=1.5, color='green')
+line, = ax.plot([], [], linewidth=1, label='Raw Data')
+filtered_line, = ax.plot([], [], linewidth=1.5, color='green', label='Filtered Data')
 
 ax.set_ylim(-1, 3)
 ax.set_xlim(0, MAX_SAMPLES)
