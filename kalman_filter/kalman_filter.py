@@ -1,24 +1,38 @@
 
 
 class KalmanFilter1D:
+
     def __init__(self, process_noise=0.01, measurement_noise=0.1):
+
         # measurement_noise = your sensor uncertainty (0.1m for DW1000)
         self.q = process_noise   # how fast the true distance can change
         self.r = measurement_noise
         self.x = None            # state estimate
         self.p = 1.0             # estimate uncertainty
 
+
     def update(self, measurement):
+
         if self.x is None:
             self.x = measurement
             return self.x
+        
+        # Reject outliers: ignore readings more than 3 standard deviations from current estimate
+        # Eliminates the sharp spikes UWB is known for while still letting genuine slow drift through
+        innovation = abs(measurement - self.x)
+        gate = 3.0 * (self.p + self.r) ** 0.5
+        if innovation > gate:
+            return self.x  # discard spike, return last good estimate
+
         # Predict
         self.p += self.q
+
         # Update
         k = self.p / (self.p + self.r)       # Kalman gain
         self.x += k * (measurement - self.x)
         self.p *= (1 - k)
         return self.x
+
 
 anchors = {
     1: (0.0, 0.0)
